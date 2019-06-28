@@ -23,28 +23,28 @@ var scores, roundScore, activePlayer, gamePlaying;
 init();
 
 // Anonymous function; has no name.
-document.querySelector('.btn-roll').addEventListener('click', function() {
-    if (gamePlaying) {
-        // 1. Random number
-        var dice = Math.floor(Math.random()*6) + 1;
-    
-        // 2. Display the result
-        var diceDOM = document.querySelector('.dice');
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice + '.png';
-
-        // 3. Update round score, if rolled number !== 1
-
-        if(dice !== 1) {
-            // Add to current score
-            roundScore += dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
-            // Change to next player
-            nextPlayer();
-        }
-    }
-});
+//document.querySelector('.btn-roll').addEventListener('click', function() {
+//    if (gamePlaying) {
+//        // 1. Random number
+//        var dice = Math.floor(Math.random()*6) + 1;
+//    
+//        // 2. Display the result
+//        var diceDOM = document.querySelector('.dice');
+//        diceDOM.style.display = 'block';
+//        diceDOM.src = 'dice-' + dice + '.png';
+//
+//        // 3. Update round score, if rolled number !== 1
+//
+//        if(dice !== 1) {
+//            // Add to current score
+//            roundScore += dice;
+//            document.querySelector('#current-' + activePlayer).textContent = roundScore;
+//        } else {
+//            // Change to next player
+//            nextPlayer();
+//        }
+//    }
+//});
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
     if (gamePlaying) {
@@ -71,17 +71,18 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
 
 function nextPlayer() {
      // Change to next player
-        document.getElementById('current-' + activePlayer).textContent = '0';
+    document.getElementById('current-' + activePlayer).textContent = '0';
 //        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-        roundScore = 0;
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
 //        document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
-        
-        // Another method rather than add/remove class is to use toggle
-        document.querySelector('.player-0-panel').classList.toggle('active');
-        document.querySelector('.player-1-panel').classList.toggle('active');
-        
-        document.querySelector('.dice').style.display = 'none';
+
+    // Another method rather than add/remove class is to use toggle
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+
+    document.querySelector('.dice').style.display = 'none';
+    previousDice = 0;
 }
 
 document.querySelector('.btn-new').addEventListener('click', init);
@@ -91,6 +92,8 @@ function init() {
     roundScore = 0;
     activePlayer = 0;
     gamePlaying = true;
+    p0Dice = 0;
+    p1Dice = 0;
     document.querySelector('.dice').style.display = 'none';
 
     // Selecting ID
@@ -109,9 +112,53 @@ function init() {
 }
 
 
+/*
+ New Rules:
+ 
+ 1. A player loses his ENTIRE score when he rolls two 6 in a row.
+    After that, the turn switches to the other player.
+    (Hint: Save previous dice roll in a separate variable)
+ */
 
+var previousDice = 0;
 
+document.querySelector('.btn-roll').addEventListener('click', function() {
+    if (gamePlaying) {
+        // 1. Random number
+        var currentDice = Math.floor(Math.random()*6) + 1;;
+        
+        // 1'. Check against previous dice roll
+        if (currentDice !== 6) {
+            // Carry on
+            // 2. Display the result
+            var diceDOM = document.querySelector('.dice');
+            diceDOM.style.display = 'block';
+            diceDOM.src = 'dice-' + currentDice + '.png';
 
+            // 3. Update round score, if rolled number !== 1
+
+            if(currentDice !== 1) {
+                // Add to current score
+                roundScore += currentDice;
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            } else {
+                // Change to next player
+                nextPlayer();
+            }
+            
+        } else {
+            // Check against previous dice
+            if (currentDice !== previousDice) {
+                // Store currentDice to previousDice
+                previousDice = currentDice;
+            } else {
+                // Player loses his entire score
+                document.getElementById('score-' + activePlayer).textContent = '0';
+                nextPlayer();
+            }
+        }
+    }
+});
 
 
 
