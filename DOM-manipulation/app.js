@@ -18,7 +18,7 @@ GAME RULES:
 //var x = document.querySelector('#score-' + activePlayer).textContent; 
 //console.log(x);
 
-var scores, roundScore, activePlayer, gamePlaying;
+var scores, roundScore, activePlayer, gamePlaying, finalScore;
 
 init();
 
@@ -55,7 +55,8 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]; // update the score board
 
         // Check if player won the game
-        if (scores[activePlayer] >= 10) {
+        
+        if (scores[activePlayer] >= finalScore) {
             document.getElementById('name-'+activePlayer).textContent = 'Winner!';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-'+activePlayer+'-panel').classList.add('winner');
@@ -95,6 +96,8 @@ function init() {
     p0Dice = 0;
     p1Dice = 0;
     document.querySelector('.dice').style.display = 'none';
+    document.querySelector('.final-score').value = '';
+    finalScore = 20;
 
     // Selecting ID
     document.getElementById('score-0').textContent = '0';
@@ -118,6 +121,10 @@ function init() {
  1. A player loses his ENTIRE score when he rolls two 6 in a row.
     After that, the turn switches to the other player.
     (Hint: Save previous dice roll in a separate variable)
+   
+ 2. Add an input field to the HTML where players can set the winning score, so that
+    they can change the predefined score of 100.
+    (Hint: You can read that value with the .value property in JavaScript. Use google!)
  */
 
 var previousDice = 0;
@@ -159,6 +166,11 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         }
     }
 });
+
+document.querySelector('.final-score').addEventListener('input', function() {
+    finalScore = document.getElementById('fscore').value;
+})
+
 
 
 
