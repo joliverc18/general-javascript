@@ -20,7 +20,7 @@ GAME RULES:
 
 /*eslint-env browser*/
 
-var scores, roundScore, activePlayer, gamePlaying, finalScore;
+var scores, roundScore, activePlayer, gamePlaying, finalScore, previousDice;
 
 init();
 
@@ -52,7 +52,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     if (gamePlaying) {
         // Add current score to global score
         scores[activePlayer] += roundScore;
-
+        previousDice = 0;
         // Update the UI
         document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]; // update the score board
 
@@ -75,10 +75,12 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
 
 function nextPlayer() {
      // Change to next player
+    
     document.getElementById('current-' + activePlayer).textContent = '0';
 //        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
     roundScore = 0;
+    previousDice = 0;
 //        document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
 
     // Another method rather than add/remove class is to use toggle
@@ -88,6 +90,7 @@ function nextPlayer() {
     document.querySelector('.dice').style.display = 'none';
     document.getElementById('dice-2').style.display = 'none';
     
+    console.log('Previous score (next player): ' + previousDice);
 }
 
 document.querySelector('.btn-new').addEventListener('click', init);
@@ -99,6 +102,7 @@ function init() {
     gamePlaying = true;
     p0Dice = 0;
     p1Dice = 0;
+    previousDice = 0;
     document.querySelector('.dice').style.display = 'none';
     document.getElementById('dice-2').style.display = 'none';
     document.querySelector('.final-score').value = '';
@@ -137,8 +141,6 @@ function init() {
     
  */
 
-var previousDice = 0;
-
 document.querySelector('.btn-roll').addEventListener('click', function() {
     if (gamePlaying) {
         // 1. Random number
@@ -147,9 +149,9 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         var currentDice = firstDiceRoll + secondDiceRoll;
         
         console.log('Player ' + (activePlayer+1) + '\'s turn');
-        console.log('Previous score: ' + previousDice);
         console.log('First die: ' + firstDiceRoll);
         console.log('Second die: ' + secondDiceRoll + '\n');
+        console.log('Previous score (start of roll): ' + previousDice);
         
         // Carry on
         // Display the result
@@ -161,25 +163,24 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         document.getElementById('dice-2').src = 'dice-' + secondDiceRoll + '.png';
         
         // 2. Update round score, if rolled number !== 1
-        if(firstDiceRoll !== 1 && secondDiceRoll !== 1) {
-            // Add to current score
-            roundScore += currentDice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
+        if (firstDiceRoll === 1 || secondDiceRoll === 1) {
             // Change to next player
-            nextPlayer();
-        }
-        
-        // Check against previous dice
-        if (currentDice !== previousDice) {
-            // Store currentDice to previousDice
-            previousDice = currentDice;
-        } else {
-            // Player loses his entire score
-            document.getElementById('score-' + activePlayer).textContent = '0';
+            console.log('Previous score (rolled 1): ' + previousDice);
             previousDice = 0;
             nextPlayer();
+        } else if (currentDice === previousDice && previousDice === 6) {
+            // Player loses his entire score
+            document.getElementById('score-' + activePlayer).textContent = '0';
+            console.log('Previous score (matched): ' + previousDice);
+            previousDice = 0;
+            nextPlayer();
+        } else {
+            // Add to current score
+            roundScore += currentDice;
+            previousDice = currentDice;
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
         }
+        
     }
     
 });
