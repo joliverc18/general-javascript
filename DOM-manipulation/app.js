@@ -18,6 +18,8 @@ GAME RULES:
 //var x = document.querySelector('#score-' + activePlayer).textContent; 
 //console.log(x);
 
+/*eslint-env browser*/
+
 var scores, roundScore, activePlayer, gamePlaying, finalScore;
 
 init();
@@ -59,6 +61,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         if (scores[activePlayer] >= finalScore) {
             document.getElementById('name-'+activePlayer).textContent = 'Winner!';
             document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
             document.querySelector('.player-'+activePlayer+'-panel').classList.add('winner');
             document.querySelector('.player-'+activePlayer+'-panel').classList.remove('active');
             gamePlaying = false;
@@ -83,7 +86,8 @@ function nextPlayer() {
     document.querySelector('.player-1-panel').classList.toggle('active');
 
     document.querySelector('.dice').style.display = 'none';
-    previousDice = 0;
+    document.getElementById('dice-2').style.display = 'none';
+    
 }
 
 document.querySelector('.btn-new').addEventListener('click', init);
@@ -96,6 +100,7 @@ function init() {
     p0Dice = 0;
     p1Dice = 0;
     document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
     document.querySelector('.final-score').value = '';
     finalScore = 20;
 
@@ -125,6 +130,11 @@ function init() {
  2. Add an input field to the HTML where players can set the winning score, so that
     they can change the predefined score of 100.
     (Hint: You can read that value with the .value property in JavaScript. Use google!)
+    
+ 3. Add another dice to the game, so that there are two dices now. 
+    The player looses his current score when one of them is a 1.
+    (Hint: you will need CSS to position the second dice, so take a look at the css code for the first one.)
+    
  */
 
 var previousDice = 0;
@@ -132,39 +142,46 @@ var previousDice = 0;
 document.querySelector('.btn-roll').addEventListener('click', function() {
     if (gamePlaying) {
         // 1. Random number
-        var currentDice = Math.floor(Math.random()*6) + 1;;
+        var firstDiceRoll = Math.floor(Math.random() * 6) + 1;
+        var secondDiceRoll = Math.floor(Math.random() * 6) + 1;
+        var currentDice = firstDiceRoll + secondDiceRoll;
         
-        // 1'. Check against previous dice roll
-        if (currentDice !== 6) {
-            // Carry on
-            // 2. Display the result
-            var diceDOM = document.querySelector('.dice');
-            diceDOM.style.display = 'block';
-            diceDOM.src = 'dice-' + currentDice + '.png';
+        console.log('Player ' + (activePlayer+1) + '\'s turn');
+        console.log('Previous score: ' + previousDice);
+        console.log('First die: ' + firstDiceRoll);
+        console.log('Second die: ' + secondDiceRoll + '\n');
+        
+        // Carry on
+        // Display the result
+        var diceDOM = document.querySelector('.dice');  // First die
+        diceDOM.style.display = 'block';
+        diceDOM.src = 'dice-' + firstDiceRoll + '.png';
 
-            // 3. Update round score, if rolled number !== 1
-
-            if(currentDice !== 1) {
-                // Add to current score
-                roundScore += currentDice;
-                document.querySelector('#current-' + activePlayer).textContent = roundScore;
-            } else {
-                // Change to next player
-                nextPlayer();
-            }
-            
+        document.getElementById('dice-2').style.display = 'block';
+        document.getElementById('dice-2').src = 'dice-' + secondDiceRoll + '.png';
+        
+        // 2. Update round score, if rolled number !== 1
+        if(firstDiceRoll !== 1 && secondDiceRoll !== 1) {
+            // Add to current score
+            roundScore += currentDice;
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
         } else {
-            // Check against previous dice
-            if (currentDice !== previousDice) {
-                // Store currentDice to previousDice
-                previousDice = currentDice;
-            } else {
-                // Player loses his entire score
-                document.getElementById('score-' + activePlayer).textContent = '0';
-                nextPlayer();
-            }
+            // Change to next player
+            nextPlayer();
+        }
+        
+        // Check against previous dice
+        if (currentDice !== previousDice) {
+            // Store currentDice to previousDice
+            previousDice = currentDice;
+        } else {
+            // Player loses his entire score
+            document.getElementById('score-' + activePlayer).textContent = '0';
+            previousDice = 0;
+            nextPlayer();
         }
     }
+    
 });
 
 document.querySelector('.final-score').addEventListener('input', function() {
