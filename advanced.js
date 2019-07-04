@@ -1,4 +1,5 @@
 /*eslint-env browser*/
+
 // Function constructor
 /*
 var john = {
@@ -62,6 +63,7 @@ console.log(mark.lastName);
 
 // Object.create
 
+/*
 var personProto = {
     calculateAge: function() {
         console.log(2016 - this.yearOfBirth);
@@ -79,6 +81,103 @@ var jane = Object.create(personProto,
     yearOfBirth: {value: 1969},
     job: {value: 'designer'}
 });
+
+*/
+
+// ----------------------------------------------------------------------
+
+// Primitives vs Objects
+
+// Variables containing primitives hold data inside the variable itself
+// Variable associated with object does not hold the object inside, but a reference to the memory location (Pointers)
+
+/*
+var a = 23;
+var b = a;
+a = 46;
+
+// You'll notice that value of b is not affected after mutation of a. Because primitive variables hold their
+// own data within
+console.log(a);
+console.log(b);
+
+var obj1 = {
+    name: 'John',
+    age: 26
+};
+
+var obj2 = obj1;
+
+obj1.age = 30;
+
+// Notice that the value of both obj's age is the same, because the variable store a reference to the memory location
+// instead of storing the value in of itself
+console.log(obj1.age);
+console.log(obj2.age);
+
+// Now lets do functions
+var age = 27;
+var obj = {
+    name: 'Jonas',
+    city: 'Lisbon'
+};
+
+function change(a, obj) {
+    a = 30;
+    obj.city = 'San Francisco';
+}
+
+change(age, obj);
+
+console.log(age);
+console.log(obj.city);
+*/
+
+// ----------------------------------------------------------------------
+
+// Passing functions as arguments
+
+//var years = [1990, 1965, 1937, 2005, 1998];
+//
+//function arrayCalc(arr, fn) {
+//    var output = [];
+//    
+//    for(var i=0;i<arr.length;i++) {
+//        output.push(fn(arr[i]));
+//    }
+//    
+//    return output;
+//}
+//
+//// This is a callback function
+//function calculateAge(el) {
+//    return 2016-el;
+//}
+//
+//function checkFullAge(age) {
+//    return age >= 18;
+//}
+//
+//function maxHeartRate(el) {
+//    return el >= 18 && el <=81 ?Math.round(206.9 - (0.67 * el)):
+//                                -1;
+//}
+//
+//// Don't need parenthesis for calculateAge here because
+//// it will be called immediately, but we want it
+//// to be called when needed in the function arrayCalc
+//var ages = arrayCalc(years, calculateAge);
+//console.log(ages);
+//
+//var fullAges = arrayCalc(ages, checkFullAge);
+//console.log(fullAges);
+//
+//var heartRates = arrayCalc(ages, maxHeartRate);
+//console.log(heartRates);
+
+
+
+
 
 
 
