@@ -250,34 +250,87 @@ console.log(obj.city);
 //    }
 //}
 
-function interviewQuestion(job) {
-    return function(name) {
-        if (job === 'designer') {
-            console.log(name + ', can you please explain what UX design is ?');
-        } else if (job === 'teacher') {
-                console.log('What subject do you taech, ' + name + '?');  
-        } else {
-                console.log('Hello ' + name + ', what do you do?');
+//function interviewQuestion(job) {
+//    return function(name) {
+//        if (job === 'designer') {
+//            console.log(name + ', can you please explain what UX design is ?');
+//        } else if (job === 'teacher') {
+//                console.log('What subject do you taech, ' + name + '?');  
+//        } else {
+//                console.log('Hello ' + name + ', what do you do?');
+//        }
+//    }
+//}
+//
+//
+//interviewQuestion('John')('designer');
+
+// Lecture : Bind, Call and apply
+
+var john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function(style, timeOfDay) {
+        if (style === 'formal') {
+            console.log('Good ' + timeOfDay + ', Ladies and gentleman I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+        } else if (style === 'friendly') {
+            console.log('Hey! What\'s up? I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
         }
     }
 }
 
+var emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer'
+};
 
-interviewQuestion('John')('designer');
+john.presentation('formal', 'morning');
+
+// Method borrowing
+// First argument is to set the 'this' element which in this case is emily
+john.presentation.call(emily, 'friendly', 'afternoon');
+
+// This will not work here because our input is not an array input
+//john.presentation.apply(emily, ['friendly', 'afternoon']);
+
+// Bind method doesn't immediately call the function
+// but it generates a copy of the function so we can store
+// it elsewhere. Useful for creating functions with present arguments
+
+var johnFriendly = john.presentation.bind(john, 'friendly');
+
+johnFriendly('morning');
+johnFriendly('night');
+
+var emilyFormal = john.presentation.bind(emily, 'formal');
+
+emilyFormal('morning');
+
+var years = [1990, 1965, 1937, 2005, 1998];
+
+function arrayCalc(arr, fn) {
+    var arrRes = [];
+    for (var i=0;i < arr.length; i++) {
+        arrRes.push(fn(arr[i]));
+    }
+    return arrRes;
+}
+
+function calculateAge(el) {
+    return 2016 - el;
+} 
+
+function isFullAge(limit, el) {
+    return el >= limit;
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+var ages = arrayCalc(years, calculateAge);
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+console.log(ages);
+console.log(fullJapan);
 
 
 
