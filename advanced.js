@@ -441,12 +441,22 @@ console.log(obj.city);
         }
     }
 
-    Question.prototype.checkAnswer = function(input) {
+    Question.prototype.checkAnswer = function(input, callback) {
+        var count;
         if (parseInt(input) === this.correct) {
             console.log('Correct answer!');
+            count = callback(true);
         } else {
             console.log('Wrong answer!');
+            count = callback(false);
         }
+        
+        this.displayScore(count);
+    }
+    
+    Question.prototype.displayScore = function(score) {
+        console.log('Current score: ' + score);
+        console.log('-------------------------------');
     }
     
     function nextQ() {
@@ -460,16 +470,28 @@ console.log(obj.city);
             var input = window.prompt('What is your answer?: ');
             
             if (input !== 'exit') {
-                questionArr[rand].checkAnswer(input);
+                questionArr[rand].checkAnswer(input, keepScore);
                 
                 nextQ();
             } 
         
     }
+    
+    function score() {
+        var count = 0;
+        return function (correct) {
+            if (correct) {
+                count++;
+            }
+            return count;
+        }
+    }
 
     var q1 = new Question('Do you like coding?', ['Yes','No'], 0);
     var q2 = new Question('Is JavaScript fun?', ['Yes','No'], 0);
     var questionArr = [q1, q2];
+    
+    var keepScore = score();
     
     nextQ();
     
