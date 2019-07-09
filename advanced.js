@@ -267,70 +267,148 @@ console.log(obj.city);
 
 // Lecture : Bind, Call and apply
 
-var john = {
-    name: 'John',
-    age: 26,
-    job: 'teacher',
-    presentation: function(style, timeOfDay) {
-        if (style === 'formal') {
-            console.log('Good ' + timeOfDay + ', Ladies and gentleman I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
-        } else if (style === 'friendly') {
-            console.log('Hey! What\'s up? I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
+//var john = {
+//    name: 'John',
+//    age: 26,
+//    job: 'teacher',
+//    presentation: function(style, timeOfDay) {
+//        if (style === 'formal') {
+//            console.log('Good ' + timeOfDay + ', Ladies and gentleman I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+//        } else if (style === 'friendly') {
+//            console.log('Hey! What\'s up? I\'m ' + this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
+//        }
+//    }
+//}
+//
+//var emily = {
+//    name: 'Emily',
+//    age: 35,
+//    job: 'designer'
+//};
+//
+//john.presentation('formal', 'morning');
+//
+//// Method borrowing
+//// First argument is to set the 'this' element which in this case is emily
+//john.presentation.call(emily, 'friendly', 'afternoon');
+//
+//// This will not work here because our input is not an array input
+////john.presentation.apply(emily, ['friendly', 'afternoon']);
+//
+//// Bind method doesn't immediately call the function
+//// but it generates a copy of the function so we can store
+//// it elsewhere. Useful for creating functions with present arguments
+//
+//var johnFriendly = john.presentation.bind(john, 'friendly');
+//
+//johnFriendly('morning');
+//johnFriendly('night');
+//
+//var emilyFormal = john.presentation.bind(emily, 'formal');
+//
+//emilyFormal('morning');
+//
+//var years = [1990, 1965, 1937, 2005, 1998];
+//
+//function arrayCalc(arr, fn) {
+//    var arrRes = [];
+//    for (var i=0;i < arr.length; i++) {
+//        arrRes.push(fn(arr[i]));
+//    }
+//    return arrRes;
+//}
+//
+//function calculateAge(el) {
+//    return 2016 - el;
+//} 
+//
+//function isFullAge(limit, el) {
+//    return el >= limit;
+//}
+//
+//
+//var ages = arrayCalc(years, calculateAge);
+//var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+//console.log(ages);
+//console.log(fullJapan);
+
+// Coding Challenge 
+
+/*
+    1.  Build a function constructor called Question to describe a question. 
+        A question should include:
+        a) question itself
+        b) the possible answers from which the player can choose
+        c) correct answer
+        
+    2.  Create a couple of questions using the constructor
+    
+    3.  Store the Task 2 in an array
+    
+    4.  Select one random question and log it on the console,
+        together with the possible answers (each question should
+        have a number)
+        
+    5.  Use the 'prompt' function to ask the user for the correct
+        answer. The user should input the number of correct answer
+        such as you displayed it on Task 4.
+        
+    6.  Check if the answer is correct and print to the console
+        whether the answer is correct or not
+        (Hint: Write another method for this)
+        
+    7.  Suppose this code would be a plugin for other programmers
+        to use in their code. So make sure that all your code
+        is private and doesn't interfere with the other programmers code
+        (Hint: A special technique)
+*/
+(function (){
+    function Question(question, answer, correct) {
+        this.question = question;
+        this.answer = answer;
+        this.correct = correct;
+    }
+
+    Question.prototype.displayQuestion =  function() {
+        console.log(this.question);
+
+        for (var i=0;i<questionArr.length;i++) {
+            console.log(i + ': ' + this.answer[i]);
         }
     }
-}
 
-var emily = {
-    name: 'Emily',
-    age: 35,
-    job: 'designer'
-};
-
-john.presentation('formal', 'morning');
-
-// Method borrowing
-// First argument is to set the 'this' element which in this case is emily
-john.presentation.call(emily, 'friendly', 'afternoon');
-
-// This will not work here because our input is not an array input
-//john.presentation.apply(emily, ['friendly', 'afternoon']);
-
-// Bind method doesn't immediately call the function
-// but it generates a copy of the function so we can store
-// it elsewhere. Useful for creating functions with present arguments
-
-var johnFriendly = john.presentation.bind(john, 'friendly');
-
-johnFriendly('morning');
-johnFriendly('night');
-
-var emilyFormal = john.presentation.bind(emily, 'formal');
-
-emilyFormal('morning');
-
-var years = [1990, 1965, 1937, 2005, 1998];
-
-function arrayCalc(arr, fn) {
-    var arrRes = [];
-    for (var i=0;i < arr.length; i++) {
-        arrRes.push(fn(arr[i]));
+    Question.prototype.checkAnswer = function(input) {
+        if (input === this.correct) {
+            console.log('Correct answer!');
+        } else {
+            console.log('Wrong answer!');
+        }
     }
-    return arrRes;
-}
 
-function calculateAge(el) {
-    return 2016 - el;
-} 
+    function checkAnswer(input, question) {
+        if (input == question.correct) {
+            console.log('Correct answer!');
+        } else {
+            console.log('Wrong answer!');
+        }
+    }
 
-function isFullAge(limit, el) {
-    return el >= limit;
-}
+    var q1 = new Question('Do you like coding?', ['Yes','No'], 0);
+    var q2 = new Question('Is JavaScript fun?', ['Yes','No'], 0);
+
+    var questionArr = [q1, q2];
+    var length = questionArr.length;
+    var rand = Math.floor(Math.random() * length);
+
+    // Display question in console
+    questionArr[rand].displayQuestion();
 
 
-var ages = arrayCalc(years, calculateAge);
-var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
-console.log(ages);
-console.log(fullJapan);
+    var input = parseInt(window.prompt('What is your answer?: '));
+    questionArr[rand].checkAnswer(input);
+ })();
+
+
 
 
 
