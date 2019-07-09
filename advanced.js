@@ -362,7 +362,71 @@ console.log(obj.city);
         is private and doesn't interfere with the other programmers code
         (Hint: A special technique)
 */
-(function (){
+//(function () {
+//    function Question(question, answer, correct) {
+//        this.question = question;
+//        this.answer = answer;
+//        this.correct = correct;
+//    }
+//
+//    Question.prototype.displayQuestion =  function() {
+//        console.log(this.question);
+//
+//        for (var i=0;i<questionArr.length;i++) {
+//            console.log(i + ': ' + this.answer[i]);
+//        }
+//    }
+//
+//    Question.prototype.checkAnswer = function(input) {
+//        if (input === this.correct) {
+//            console.log('Correct answer!');
+//        } else {
+//            console.log('Wrong answer!');
+//        }
+//    }
+//
+//    function checkAnswer(input, question) {
+//        if (input == question.correct) {
+//            console.log('Correct answer!');
+//        } else {
+//            console.log('Wrong answer!');
+//        }
+//    }
+//
+//    var q1 = new Question('Do you like coding?', ['Yes','No'], 0);
+//    var q2 = new Question('Is JavaScript fun?', ['Yes','No'], 0);
+//
+//    var questionArr = [q1, q2];
+//    var length = questionArr.length;
+//    var rand = Math.floor(Math.random() * length);
+//
+//    // Display question in console
+//    questionArr[rand].displayQuestion();
+//
+//
+//    var input = parseInt(window.prompt('What is your answer?: '));
+//    questionArr[rand].checkAnswer(input);
+// })();
+
+/* 
+    8.  After you display the result, display the next random question,
+        so that the game never ends
+        (Hint: Write a function for this and call it right after displaying the result)
+        
+    9.  Be careful: after Task 8, the game literally never ends. So include the option
+        to quit the game if the user writes 'exit' instead of the answer.
+        In this case, DON'T call the function from task 8.
+        
+    10. Track the user's score to make the game more fun! So each time an answer is correct, 
+        add 1 point to the score.
+        (Hint: I'm going to use the power of closures for this, but you don't have to, just do this with
+        the tools you feel more comfortable at this point).
+        
+    11. Display the score in the console.
+        Use yet another method for this.
+*/
+
+(function () {
     function Question(question, answer, correct) {
         this.question = question;
         this.answer = answer;
@@ -378,34 +442,37 @@ console.log(obj.city);
     }
 
     Question.prototype.checkAnswer = function(input) {
-        if (input === this.correct) {
+        if (parseInt(input) === this.correct) {
             console.log('Correct answer!');
         } else {
             console.log('Wrong answer!');
         }
     }
+    
+    function nextQ() {
+            var length = questionArr.length;
+            var rand = Math.floor(Math.random() * length);
 
-    function checkAnswer(input, question) {
-        if (input == question.correct) {
-            console.log('Correct answer!');
-        } else {
-            console.log('Wrong answer!');
-        }
+            // Display question in console
+            questionArr[rand].displayQuestion();
+
+
+            var input = window.prompt('What is your answer?: ');
+            
+            if (input !== 'exit') {
+                questionArr[rand].checkAnswer(input);
+                
+                nextQ();
+            } 
+        
     }
 
     var q1 = new Question('Do you like coding?', ['Yes','No'], 0);
     var q2 = new Question('Is JavaScript fun?', ['Yes','No'], 0);
-
     var questionArr = [q1, q2];
-    var length = questionArr.length;
-    var rand = Math.floor(Math.random() * length);
-
-    // Display question in console
-    questionArr[rand].displayQuestion();
-
-
-    var input = parseInt(window.prompt('What is your answer?: '));
-    questionArr[rand].checkAnswer(input);
+    
+    nextQ();
+    
  })();
 
 
